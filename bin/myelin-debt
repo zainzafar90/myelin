@@ -1,0 +1,147 @@
+#!/usr/bin/env bash
+# myelin-debt — parse a project's debt ledger (canonical + legacy formats).
+# Usage: myelin-debt list|summary|unparsed|top|brief [repo] [N]
+set -u
+
+export LC_ALL=C
+TAB=$(printf '\t')
+LIB="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib"
+USAGE='usage: myelin-debt list|summary|unparsed|top [repo] [N]'
+
+die() {
+  printf 'myelin-debt: %s\n' "$1" >&2
+  exit 2
+}
+
+ledger_path() {
+  local repo=$1
+  local rel=".knowledge/state/debt.md"
+  local conf="$repo/.knowledge/myelin.conf"
+  local custom
+
+  if [ -f "$conf" ]; then
+    custom=$(sed -n 's/^debt_path=//p' "$conf" | head -1)
+
+    if [ -n "$custom" ]; then
+      case "$custom" in
+        /*|*..*) die "unsafe debt_path in $conf: $custom" ;;
+      esac
+      rel=$custom
+    fi
+  fi
+
+  printf '%s/%s\n' "$repo" "$rel"
+}
+
+scan_ledger() {
+  awk -v TAB="$TAB" -f "$LIB/debt-ledger-normalize.awk" -f "$LIB/debt-ledger-parse.awk" "$1"
+}
+
+list_items() {
+  scan_ledger "$1" | sed -n 's/^I	//p'
+}
+
+summarize() {
+  awk -F'\t' '
+$1 == "U" { un++; next }
+
+$1 == "I" {
+  if ($3 == "open") {
+    open++
+    sev[$4]++
+  } else if ($3 == "closed") {
+    closed++
+  } else {
+    dup++
+  }
+}
+
+END {
+  printf "open=%d high=%d medium=%d low=%d unknown=%d closed=%d duplicate=%d unparsed=%d\n",
+    open, sev["high"], sev["medium"], sev["low"], sev["unknown"], closed, dup, un
+}'
+}
+
+top_from_scan() {
+  local n=$1
+
+  awk -F'\t' '
+$1 == "I" && $3 == "open" {
+  r = ($4 == "high") ? 1 : ($4 == "medium") ? 2 : ($4 == "unknown") ? 3 : 4
+  d = ($5 == "-") ? "9999-99-99" : $5
+  printf "%d\t%s\t%s\t%s\t%s\t%s\n", r, d, $2, $4, $5, $8
+}' | sort -t "$TAB" -k1,1n -k2,2 | head -n "$n" |
+    awk -F'\t' '{ printf "- [%s] %s — %s (%s)\n", $4, $3, $6, $5 }'
+}
+
+brief() {
+  local scan
+
+  scan=$(scan_ledger "$1")
+
+  printf '%s\n' "$scan" | summarize
+  printf '%s\n' "$scan" | top_from_scan "$2"
+}
+
+is_number() {
+  case "$1" in
+    ''|*[!0-9]*) return 1 ;;
+  esac
+
+  return 0
+}
+
+parse_args() {
+  local a
+
+  repo=""
+  n=5
+  for a in "$@"; do
+    if is_number "$a" && { [ "$cmd" = top ] || [ "$cmd" = brief ]; }; then
+      n=$a
+    else
+      repo=$a
+    fi
+  done
+
+  [ -n "$repo" ] || repo=$PWD
+}
+
+run_command() {
+  local file=$1
+
+  case "$cmd" in
+    list) list_items "$file" ;;
+    summary) scan_ledger "$file" | summarize ;;
+    unparsed) scan_ledger "$file" | sed -n 's/^U	//p' ;;
+    top) scan_ledger "$file" | top_from_scan "$n" ;;
+    brief) brief "$file" "$n" ;;
+  esac
+}
+
+main() {
+  local file
+
+  cmd=${1:-}
+  [ $# -gt 0 ] && shift
+
+  case "$cmd" in
+    list|summary|unparsed|top|brief) ;;
+    *)
+      printf '%s\n' "$USAGE" >&2
+      exit 2
+      ;;
+  esac
+
+  parse_args "$@"
+  [ -d "$repo" ] || die "repo not found: $repo"
+
+  file=$(ledger_path "$repo") || exit 2
+  [ -f "$file" ] || die "ledger not found: $file"
+
+  run_command "$file"
+
+  exit 0
+}
+
+main "$@"

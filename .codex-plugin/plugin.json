@@ -1,0 +1,15 @@
+{
+  "name": "myelin",
+  "version": "0.2.2",
+  "description": "Thin workflow router: canon injection, exit gates, project state ledger. Owns zero skills.",
+  "author": { "name": "Zain Zafar" },
+  "license": "MIT",
+  "hooks": "./hooks/codex-hooks.json",
+  "interface": {
+    "displayName": "Myelin",
+    "shortDescription": "Workflow router with exit-gate hooks",
+    "developerName": "Zain Zafar",
+    "category": "Productivity",
+    "capabilities": ["Lifecycle hooks"]
+  }
+}

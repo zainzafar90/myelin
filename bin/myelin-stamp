@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# myelin-stamp — find active git repos and stamp .knowledge/ into them.
+# Usage: myelin-stamp [--days N] [path ...]
+#   No paths: scans ~/projects for repos with commits in the
+#   last N days (default 30). Idempotent: never overwrites an existing
+#   .knowledge/, never duplicates pointers or registry lines.
+set -uo pipefail
+
+ROOT="${MYELIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+SKEL="$ROOT/templates/knowledge-skeleton"
+REG="${MYELIN_HOME:-$HOME/.myelin}/registry.txt"
+# shellcheck disable=SC2016
+POINTER='Machine-maintained project state lives in `.knowledge/` — read `.knowledge/INDEX.md` first.'
+DAYS=30
+
+die() {
+  printf 'myelin-stamp: %s\n' "$1" >&2
+  exit 2
+}
+
+discover_repos() {
+  local g
+
+  while IFS= read -r g; do
+    printf '%s\n' "$(dirname "$g")"
+  done < <(find "$HOME/projects" -maxdepth 4 -name node_modules -prune -o -type d -name .git -print 2>/dev/null)
+}
+
+is_active() {
+  [ -n "$(git -C "$1" log --since="$DAYS days ago" -1 --format=%h 2>/dev/null)" ]
+}
+
+is_registered() {
+  grep -qxF "$1" "$REG" 2>/dev/null
+}
+
+ensure_gitignore() {
+  local gi="$1/.gitignore"
+
+  if [ -f "$gi" ] && [ -n "$(tail -c1 "$gi" 2>/dev/null)" ]; then
+    printf '\n' >> "$gi"
+  fi
+
+  grep -qxF '.knowledge/' "$gi" 2>/dev/null || printf '.knowledge/\n' >> "$gi"
+}
+
+ensure_pointers() {
+  local f
+
+  for f in CLAUDE.md AGENTS.md; do
+    grep -q 'myelin' "$1/$f" 2>/dev/null || printf '\n<!-- myelin --> %s\n' "$POINTER" >> "$1/$f"
+  done
+}
+
+stamp_repo() {
+  local p=$1
+
+  cp -Rn "$SKEL" "$p/.knowledge" 2>/dev/null || true
+  ensure_gitignore "$p"
+  ensure_pointers "$p"
+  mkdir -p "$(dirname "$REG")" || die "cannot create registry dir: $REG"
+  printf '%s\n' "$p" >> "$REG" || die "cannot append to registry: $REG"
+  printf 'stamped: %s\n' "$p"
+}
+
+main() {
+  local p stamped=0 already=0 inactive=0
+  local candidates=()
+
+  if [ "${1:-}" = "--days" ]; then
+    [ $# -ge 2 ] || die "--days needs a value"
+    DAYS=$2
+    shift 2
+  fi
+
+  if [ $# -gt 0 ]; then
+    candidates=("$@")
+  else
+    while IFS= read -r p; do
+      candidates+=("$p")
+    done < <(discover_repos)
+  fi
+
+  for p in ${candidates[@]+"${candidates[@]}"}; do
+    [ -d "$p" ] || continue
+
+    if ! is_active "$p"; then
+      inactive=$((inactive + 1))
+      continue
+    fi
+
+    if is_registered "$p"; then
+      already=$((already + 1))
+      continue
+    fi
+
+    stamp_repo "$p"
+    stamped=$((stamped + 1))
+  done
+
+  printf 'myelin-stamp: %d stamped, %d already registered, %d inactive (>%sd)\n' "$stamped" "$already" "$inactive" "$DAYS"
+}
+
+main "$@"

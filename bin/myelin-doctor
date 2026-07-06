@@ -1,0 +1,165 @@
+#!/usr/bin/env bash
+# myelin-doctor — per-project debt-ledger health across registry.txt (read-only).
+# Output rows: state<TAB>path<TAB>detail
+set -u
+
+export LC_ALL=C
+HERE=$(cd "$(dirname "$0")" && pwd)
+REGISTRY="${MYELIN_REGISTRY:-${MYELIN_HOME:-$HOME/.myelin}/registry.txt}"
+DEBT="$HERE/myelin-debt"
+TAB=$(printf '\t')
+SEARCH_DIRS="${MYELIN_SEARCH_DIRS:-$HOME/projects}"
+TOTAL_KEYS="open high medium low unknown closed duplicate unparsed"
+
+die() {
+  printf 'myelin-doctor: %s\n' "$1" >&2
+  exit 2
+}
+
+registry_paths() {
+  grep -v -e '^[[:space:]]*#' -e '^[[:space:]]*$' "$REGISTRY"
+}
+
+find_candidates() {
+  local base d
+
+  base=$(basename "$1")
+
+  for d in $SEARCH_DIRS; do
+    [ -d "$d" ] || continue
+    find "$d" -maxdepth 4 -name node_modules -prune -o -type d -name "$base" -print 2>/dev/null
+  done | while read -r c; do
+    [ -d "$c/.git" ] && [ "$c" != "$1" ] && printf 'candidate: %s\n' "$c"
+  done
+}
+
+field() {
+  printf '%s' "$1" | tr ' ' '\n' | sed -n "s/^$2=//p"
+}
+
+classify() {
+  local p=$1 err sum un op cl du
+
+  STATE=""
+  DETAIL=""
+
+  if [ ! -d "$p" ]; then
+    STATE=missing
+    DETAIL="path does not exist"
+
+    return
+  fi
+
+  err=$("$DEBT" summary "$p" 2>&1 >/dev/null)
+  sum=$("$DEBT" summary "$p" 2>/dev/null)
+
+  if [ -z "$sum" ]; then
+    STATE=no-ledger
+    DETAIL="${err:-no debt ledger}"
+
+    return
+  fi
+
+  un=$(field "$sum" unparsed)
+  op=$(field "$sum" open)
+  cl=$(field "$sum" closed)
+  du=$(field "$sum" duplicate)
+  DETAIL="$sum"
+
+  if [ "$un" -gt 0 ]; then
+    STATE=partial
+  elif [ $((op + cl + du)) -eq 0 ]; then
+    STATE=empty
+    DETAIL="ledger exists, zero items"
+  else
+    STATE=ok
+  fi
+}
+
+init_counters() {
+  T_open=0
+  T_high=0
+  T_medium=0
+  T_low=0
+  T_unknown=0
+  T_closed=0
+  T_duplicate=0
+  T_unparsed=0
+  N_missing=0
+  N_noledger=0
+  N_partial=0
+  N_real=0
+}
+
+add_totals() {
+  local k v
+
+  for k in $TOTAL_KEYS; do
+    v=$(field "$1" "$k")
+    [ -n "$v" ] || v=0
+    eval "T_$k=\$((T_$k + v))"
+  done
+}
+
+count_state() {
+  case "$1" in
+    missing) N_missing=$((N_missing + 1)) ;;
+    no-ledger) N_noledger=$((N_noledger + 1)) ;;
+    partial)
+      N_partial=$((N_partial + 1))
+      N_real=$((N_real + 1))
+      add_totals "$2"
+      ;;
+    ok)
+      N_real=$((N_real + 1))
+      add_totals "$2"
+      ;;
+    empty) N_real=$((N_real + 1)) ;;
+  esac
+}
+
+print_unparsed_sample() {
+  "$DEBT" unparsed "$1" 2>/dev/null | head -n 3 | while IFS="$TAB" read -r ln tx; do
+    printf '\t\tunparsed line %s: %s\n' "$ln" "$tx"
+  done
+}
+
+print_project() {
+  local p=$1 note=""
+
+  case "$p" in
+    */practice/myelin-playground*) note=" (playground — excluded from totals)" ;;
+  esac
+
+  classify "$p"
+  printf '%s\t%s\t%s%s\n' "$STATE" "$p" "$DETAIL" "$note"
+
+  [ "$STATE" = partial ] && print_unparsed_sample "$p"
+  [ "$STATE" = missing ] && find_candidates "$p" | sed "s/^/$TAB$TAB/"
+  [ -z "$note" ] && count_state "$STATE" "$DETAIL"
+
+  return 0
+}
+
+print_total() {
+  printf 'TOTAL (%d reachable projects): open=%d high=%d medium=%d low=%d unknown=%d closed=%d duplicate=%d unparsed=%d | %d missing, %d no-ledger, %d partial\n' \
+    "$N_real" "$T_open" "$T_high" "$T_medium" "$T_low" "$T_unknown" "$T_closed" "$T_duplicate" "$T_unparsed" \
+    "$N_missing" "$N_noledger" "$N_partial"
+}
+
+main() {
+  local p
+
+  [ -f "$REGISTRY" ] || die "registry not found: $REGISTRY"
+  [ -x "$DEBT" ] || die "myelin-debt not executable: $DEBT"
+
+  init_counters
+
+  for p in $(registry_paths); do
+    print_project "$p"
+  done
+
+  print_total
+}
+
+main "$@"

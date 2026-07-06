@@ -1,0 +1,2 @@
+{"type":"user","message":{"content":[{"type":"text","text":"SessionStart context: SHIP route says verification-before-completion then /pr-review or /simplify then /pr-description. Escape hatch documented."}]}}
+{"type":"assistant","message":{"content":[{"type":"text","text":"I'll add the function now and commit."}]}}

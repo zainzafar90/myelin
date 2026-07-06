@@ -1,0 +1,11 @@
+{
+  "name": "myelin",
+  "owner": { "name": "Zain Zafar" },
+  "plugins": [
+    {
+      "name": "myelin",
+      "source": "./",
+      "description": "Thin workflow router: canon injection, exit gates, project state ledger."
+    }
+  ]
+}
