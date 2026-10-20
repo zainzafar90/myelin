@@ -62,8 +62,7 @@ Do not use `assert` for required validation or authorization. Reject untrusted p
 
 ## Tooling and tests
 
-The source prompt's preferred baseline is `uv`, Ruff, mypy, and pytest. It is a preference for an adopted or
-explicitly selected setup—not permission to replace another working toolchain.
+Preferred baseline for new Python projects: `uv`, Ruff, mypy, and pytest. Never replace another working toolchain.
 
 When those tools and paths already match the repository, its checks may look like:
 
