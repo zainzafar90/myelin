@@ -7,6 +7,8 @@ description: >-
   drifting. Applies the spacing once as a whitespace-only change, proves nothing
   else changed, and wires the rule into the repo's check gate. Works in any repo;
   the TypeScript/JavaScript path is the most detailed.
+metadata:
+  version: "1.0.0"
 ---
 
 # Code spacing

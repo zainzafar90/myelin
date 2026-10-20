@@ -1,6 +1,8 @@
 ---
 name: frontend-verify-standards
 description: Use before declaring ANY browser-facing change done — the definition of done for UI work. An edit that compiles is not done; run it, attack it, audit it, rerun until clean.
+metadata:
+  version: "1.1.0"
 ---
 
 # Frontend Verification Standards (definition of done)
@@ -9,7 +11,6 @@ Composition skill: chains tools that already exist; this file only sets the
 bar. Never report a UI change complete on a successful edit or build alone.
 
 ## The loop
-*Distills: the loop pattern (edit → verify end-to-end → fix → rerun) + an embed-heavy stack*
 
 1. **Launch the real app** — use `/run` (it knows per-project launch quirks).
 2. **`/expect`** — adversarial browser pass against the change: interact with
@@ -27,8 +28,8 @@ bar. Never report a UI change complete on a successful edit or build alone.
   postMessage, and viewport all behave differently.
 - **Both color schemes:** dark mode and light mode.
 - **Both viewports:** mobile (~375px) and desktop.
-- **Data states:** change touches fetching? Verify loading, empty, and error
-  states render (route: loading-empty-error-states).
+- **Data states:** change touches fetching? Force loading, empty, and error
+  (throttle, empty fixture, blocked request) and confirm each renders.
 
 ## Exit rule
 
