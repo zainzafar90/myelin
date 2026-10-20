@@ -1,10 +1,10 @@
 # Optional React web stack
 
-This preserves the preferred stack from the supplied frontend prompt. It is not a requirement for every React
-application and never authorizes replacing an existing stack. Read relevant sections when the touched code uses
+The preferred stack for new React web projects. It is not a requirement for every React application and
+never authorizes replacing an existing stack. Read relevant sections when the touched code uses
 these tools; ignore sections for tools it does not use. A migration requires an explicit task or project decision.
 
-The source target is React, Vite, TypeScript, Tailwind CSS v4, shadcn/ui, TanStack Query, TanStack Table,
+The preferred stack is React, Vite, TypeScript, Tailwind CSS v4, shadcn/ui, TanStack Query, TanStack Table,
 React Hook Form, Zod, Oxlint, Oxfmt, Vitest, React Testing Library, and Playwright for critical flows.
 Use the installed versions and their real configuration; this list is not an instruction to upgrade dependencies.
 
@@ -18,7 +18,7 @@ Keep generic primitives in the repository's UI area, recurring product patterns 
 area, and domain-aware components in features. `components/ui` and `components/patterns` are suggested names,
 not mandatory relocation targets. Avoid meaningless `AppButton`, `OurDialog`, and `BaseCard` wrappers.
 
-The source visual default is restrained: neutral surfaces, one primary accent, consistent spacing/control
+The default look is restrained: neutral surfaces, one primary accent, consistent spacing/control
 heights, clear typography, minimal nested cards, predictable actions, and obvious data states. Use it when
 that design direction is selected; preserve another established visual system otherwise.
 
@@ -65,7 +65,7 @@ validation messages/behavior, payload shape, and permission behavior unless chan
 
 ## Tooling and client configuration
 
-Oxlint is the source preference for linting, and Oxfmt for formatting. When migrating lint tools, preserve important
+Oxlint is the preferred linter and Oxfmt the preferred formatter. When migrating lint tools, preserve important
 React, hooks, accessibility, import, and correctness checks. Do not remove ESLint until necessary equivalent
 coverage is accounted for. Do not blanket-disable rules to finish a migration.
 

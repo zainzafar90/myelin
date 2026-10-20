@@ -8,15 +8,12 @@ description: >-
   thin, state ownership explicit, and behavior preserved. React and the preferred
   Vite/shadcn stack are optional references, not requirements for every frontend.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Frontend engineering
 
-Apply this with `coding-core`. Explicitly load that installed skill when it is not already in context.
-With this bundle's sibling filesystem layout, it is [coding-core](../coding-core/SKILL.md).
-Do not assume that naming another skill automatically loads it. If unavailable, report the missing dependency
-and do not claim that the complete bundle was applied.
+Load [coding-core](../coding-core/SKILL.md) first if it is not in context; if it is missing, say so.
 
 The core owns shared code quality, change safety, and language references. This skill owns UI boundaries,
 state, interactions, presentation contracts, and frontend verification. Use native equivalents where a frontend
@@ -28,7 +25,7 @@ Inspect the touched feature, actual framework/version, router, design system, da
 
 | Task context | Read |
 | --- | --- |
-| React components, hooks, JSX, or React routing | [React](references/react.md) |
+| React components, hooks, JSX, or React routing | the `react-craft` skill (naming, structure, routes, tests) |
 | React web work using shadcn, Tailwind, TanStack Query/Table, React Hook Form/Zod, or the explicitly selected preferred stack | [React web stack](references/react-web-stack.md); apply only sections for tools actually adopted |
 | An explicitly requested or already-assigned migration to shadcn | [shadcn migration](references/shadcn-migration.md) |
 
@@ -82,8 +79,8 @@ trivial setters merely for ceremony. Do not build universal table or form genera
 
 Preserve the existing design system, semantic structure, tokens, spacing conventions, and interaction patterns.
 Use established accessible primitives where they fit; do not wrap every primitive or replace it with a visually
-similar but inaccessible custom control. The source's neutral, restrained shadcn visual preference is optional
-stack guidance, not a rule banning another product's established visual design.
+similar but inaccessible custom control. The restrained shadcn look in the stack reference is
+a default for new projects, never a reason to restyle an established product.
 
 For data-driven features, deliberately handle loading, error, empty, populated, mutation pending/failure,
 and meaningful success feedback. Account for background refresh where relevant. Never turn a failed request
