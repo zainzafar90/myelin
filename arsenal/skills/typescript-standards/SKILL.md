@@ -19,15 +19,16 @@ If a rule and existing code conflict, flag it. Never silently copy the wrong pat
 
 Run on the touched files (`$FILES`). Every hit is a lead; read it before calling it a finding.
 
-| Check | Command |
-|---|---|
-| Over 200 lines | `wc -l $FILES \| awk '$1 > 200 && $2 != "total"'` |
-| Unjustified `any` | `grep -nE ':\s*any\b\|<any>\|\bas any\b\|any\[\]' $FILES` |
-| Default exports | `grep -n 'export default' $FILES` (allowed only where the framework requires) |
-| One-line guards | `grep -nE '^\s*if \(.*\) (return\|throw\|continue\|break)\b' $FILES` |
-| `//` comments | `grep -nE '^\s*//' $FILES` (house style is `/* */`, 8 words or fewer) |
-| Inline style values | `grep -n 'style={{' $FILES` (prefer CSS variables) |
-| Scattered env reads | `grep -n 'process.env\.' $FILES \| grep -v '/config'` |
-| Wrong lockfile | `ls package-lock.json yarn.lock 2>/dev/null` next to a `pnpm-lock.yaml` |
-| Bug fix without a failing test first | the test change precedes or ships with the fix |
-| New feature module without tests | a test file exists in the same change |
+```bash
+wc -l $FILES | awk '$1 > 200 && $2 != "total"'           # over 200 lines
+grep -nE ':\s*any\b|<any>|\bas any\b|any\[\]' $FILES    # unjustified any
+grep -n 'export default' $FILES                         # only where the framework requires
+grep -nE '^\s*if \(.*\) (return|throw|continue|break)\b' $FILES  # one-line guards
+grep -nE '^\s*//' $FILES                                 # house style is /* */, 8 words or fewer
+grep -n 'style={{' $FILES                               # prefer CSS variables
+grep -n 'process.env\.' $FILES | grep -v '/config'      # scattered env reads
+ls package-lock.json yarn.lock 2>/dev/null              # wrong lockfile next to pnpm-lock.yaml
+```
+
+Also check by reading the diff: a bug fix ships with a test that failed first, and a new feature module
+ships with its tests in the same change.
