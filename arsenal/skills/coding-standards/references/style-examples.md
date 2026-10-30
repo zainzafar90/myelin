@@ -9,10 +9,10 @@ Bad: narration of the next command.
 command -v jq >/dev/null 2>&1 || exit 0
 ```
 
-Good: rationale and a fail-open constraint.
+Good: the fail-open constraint, 8 words or fewer.
 
 ```bash
-# jq is optional; a missing parser must never block the user's work.
+# jq is optional; never block on it.
 command -v jq >/dev/null 2>&1 || exit 0
 ```
 

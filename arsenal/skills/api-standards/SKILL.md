@@ -1,25 +1,21 @@
 ---
-name: api-engineering
+name: api-standards
 description: >-
   Applies server-side engineering standards when implementing, refactoring,
   debugging, or reviewing API handlers, controllers, application workflows,
   authorization, persistence, integrations, webhooks, or backend workers. Use
-  with coding-core for backend behavior in any language or framework. Not for
+  with coding-standards for backend behavior in any language or framework. Not for
   a frontend-only HTTP client change. Focuses on thin boundaries, explicit
   business rules, transaction ownership, concurrency, and reliable effects.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
-# API engineering
+# API standards
 
-Apply this with `coding-core`. Explicitly load that installed skill when it is not already in context.
-With this bundle's sibling filesystem layout, it is [coding-core](../coding-core/SKILL.md).
-Do not assume that naming another skill automatically loads it. If unavailable, report the missing dependency
-and do not claim that the complete bundle was applied.
-
-This skill owns server concerns; the core owns shared readability, contracts, change safety, and language
-references. Apply only relevant sections. A pure domain calculation does not need an HTTP handler or database.
+Load the `coding-standards` skill first if it is not in context; if it is missing, say so.
+Core owns limits, naming, contracts, and change safety. This skill adds server concerns only.
+Apply only the relevant sections; a pure calculation needs no handler or database.
 
 ## First identify the boundary
 
@@ -28,9 +24,8 @@ and affected callers. Keep the repository's established mechanism where it satis
 Do not introduce a new architecture because this skill uses the words service, repository, or adapter.
 
 For database writes, external effects, retries, or concurrent work, read
-[Persistence and external effects](references/reliability.md) before implementation or review.
-No backend-framework-specific guide is bundled; the original source specifies Python practices, not a complete
-framework policy. Consult the actual framework's documentation where lifecycle or version details matter.
+[Persistence and external effects](references/reliability.md) first. For framework lifecycle details,
+use that framework's own documentation.
 
 ## Keep transport thin
 

@@ -29,16 +29,10 @@ A timeout is an uncertain outcome, not proof that the remote operation did nothi
 retry an important write unless the operation's idempotency or deduplication contract makes it safe.
 Verify the actual provider's behavior rather than assuming all idempotency keys have the same semantics.
 
-## Additional clarification: remote success and local failure
+## Remote success, local failure
 
-The source prompt's refund example illustrates workflow readability; it is not a complete production payment
-protocol. Review what happens when the remote effect succeeds but the local save fails. Do not treat a local
-database rollback as undoing a separate remote call.
-
-This clarification follows from distinguishing the database's transaction boundary from the remote API's
-operation/retry contract. PostgreSQL's transaction tutorial describes atomic database changes; Stripe's
-idempotency documentation illustrates a separate provider-side retry contract. Neither implies a combined
-cross-system transaction.
+A local database rollback never undoes a separate remote call. The database transaction and the provider's
+retry contract are two different boundaries; there is no combined cross-system transaction.
 
 For a real effectful workflow, answer the relevant questions explicitly:
 
@@ -63,10 +57,9 @@ verify the intended rollback behavior.
 Report unsupported guarantees and untested failure windows rather than presenting an incomplete protocol
 as production-safe.
 
-## Primary references for the added clarification
+## References
 
-Database transaction boundary: `https://www.postgresql.org/docs/current/tutorial-transactions.html`
+- Transaction boundary: `https://www.postgresql.org/docs/current/tutorial-transactions.html`
+- A provider idempotency contract: `https://docs.stripe.com/api/idempotent_requests`
 
-Example provider-specific idempotency contract: `https://docs.stripe.com/api/idempotent_requests`
-
-These references explain the distinction; they do not select PostgreSQL or Stripe for the repository.
+Examples of the distinction only; they do not pick PostgreSQL or Stripe.

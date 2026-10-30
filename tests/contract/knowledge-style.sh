@@ -15,8 +15,8 @@ INDEX_FILES=(
   "templates/knowledge-skeleton/INDEX.md"
   ".knowledge/INDEX.md"
 )
-GLOBAL_STANDARDS="arsenal/skills/coding-core/SKILL.md"
-STYLE_EXAMPLES="arsenal/skills/coding-core/references/style-examples.md"
+GLOBAL_STANDARDS="arsenal/skills/coding-standards/SKILL.md"
+STYLE_EXAMPLES="arsenal/skills/coding-standards/references/style-examples.md"
 
 failed=0
 

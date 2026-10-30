@@ -1,22 +1,19 @@
 ---
-name: frontend-engineering
+name: frontend-standards
 description: >-
   Applies frontend engineering standards when implementing, refactoring, debugging,
   or reviewing UI features, components, navigation, client state, forms, tables,
   data fetching, accessibility, or component-library migrations. Use with
-  coding-core for frontend work in any framework. Keeps features cohesive, routes
+  coding-standards for frontend work in any framework. Keeps features cohesive, routes
   thin, state ownership explicit, and behavior preserved. React and the preferred
   Vite/shadcn stack are optional references, not requirements for every frontend.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
-# Frontend engineering
+# Frontend standards
 
-Apply this with `coding-core`. Explicitly load that installed skill when it is not already in context.
-With this bundle's sibling filesystem layout, it is [coding-core](../coding-core/SKILL.md).
-Do not assume that naming another skill automatically loads it. If unavailable, report the missing dependency
-and do not claim that the complete bundle was applied.
+Load the `coding-standards` skill first if it is not in context; if it is missing, say so.
 
 The core owns shared code quality, change safety, and language references. This skill owns UI boundaries,
 state, interactions, presentation contracts, and frontend verification. Use native equivalents where a frontend
@@ -28,7 +25,7 @@ Inspect the touched feature, actual framework/version, router, design system, da
 
 | Task context | Read |
 | --- | --- |
-| React components, hooks, JSX, or React routing | [React](references/react.md) |
+| React components, hooks, JSX, or React routing | the `react-standards` skill (naming, structure, routes, tests) |
 | React web work using shadcn, Tailwind, TanStack Query/Table, React Hook Form/Zod, or the explicitly selected preferred stack | [React web stack](references/react-web-stack.md); apply only sections for tools actually adopted |
 | An explicitly requested or already-assigned migration to shadcn | [shadcn migration](references/shadcn-migration.md) |
 
@@ -42,8 +39,9 @@ Keep feature rules, API calls, state configuration, and feature-specific compone
 Maintain distinct responsibilities for generic UI primitives, small shared product patterns, and domain-aware
 feature components. A generic button should not know about an inquiry; an inquiry action component may.
 
-Do not enforce a universal directory tree; new files follow coding-core domain naming. In an existing repository, improve local ownership without relocating
-unrelated code. Do not create a service layer because the backend has one, and do not force small features into
+New React code follows the `features/` layout in `react-standards`; other frameworks follow coding-standards domain naming.
+In an existing repository, improve local ownership without relocating unrelated code; move files only when the
+task is a restructure. Do not create a service layer because the backend has one, and do not force small features into
 many files. A cohesive metadata module plus a field component can be enough.
 
 A route establishes what appears at a location: parameters, redirects, context, authentication/layout boundaries,
@@ -82,8 +80,8 @@ trivial setters merely for ceremony. Do not build universal table or form genera
 
 Preserve the existing design system, semantic structure, tokens, spacing conventions, and interaction patterns.
 Use established accessible primitives where they fit; do not wrap every primitive or replace it with a visually
-similar but inaccessible custom control. The source's neutral, restrained shadcn visual preference is optional
-stack guidance, not a rule banning another product's established visual design.
+similar but inaccessible custom control. The restrained shadcn look in the stack reference is
+a default for new projects, never a reason to restyle an established product.
 
 For data-driven features, deliberately handle loading, error, empty, populated, mutation pending/failure,
 and meaningful success feedback. Account for background refresh where relevant. Never turn a failed request

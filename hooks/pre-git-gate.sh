@@ -7,9 +7,9 @@ set -u
 trap 'exit 0' ERR
 
 GIT_WRITE_RE='(^|[;&| ])git[[:space:]]+(-[^[:space:]]+[[:space:]]+|-c[[:space:]]+[^[:space:]]+[[:space:]]+)*(commit|push)\b'
-CLAUDE_REVIEW_RE='("skill"[[:space:]]*:[[:space:]]*"(simplify|pr-review|pr_review|code-review(:code-review)?)"|<command-name>(pr-review|pr_review|code-review|simplify|review))'
+CLAUDE_REVIEW_RE='("skill"[[:space:]]*:[[:space:]]*"(simplify|lean|ship|pr-review|pr_review|code-review(:code-review)?)"|<command-name>(pr-review|pr_review|code-review|simplify|lean|ship|review))'
 CODEX_CALL_RE='"type":"(custom_tool_call|function_call)"'
-CODEX_REVIEW_RE='(cat|sed|head|tail|nl|bat)[^"]{0,40}skills/(simplify|pr-review|pr_review|code-review)/SKILL\.md'
+CODEX_REVIEW_RE='(cat|sed|head|tail|nl|bat)[^"]{0,40}skills/(simplify|lean|ship|pr-review|pr_review|code-review)/SKILL\.md'
 
 is_bash_tool_call() {
   printf '%s' "$1" | grep -q '"tool_name"[[:space:]]*:[[:space:]]*"Bash"'
