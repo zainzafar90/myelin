@@ -1,19 +1,19 @@
 ---
-name: api-engineering
+name: api-standards
 description: >-
   Applies server-side engineering standards when implementing, refactoring,
   debugging, or reviewing API handlers, controllers, application workflows,
   authorization, persistence, integrations, webhooks, or backend workers. Use
-  with coding-core for backend behavior in any language or framework. Not for
+  with coding-standards for backend behavior in any language or framework. Not for
   a frontend-only HTTP client change. Focuses on thin boundaries, explicit
   business rules, transaction ownership, concurrency, and reliable effects.
 metadata:
   version: "1.1.0"
 ---
 
-# API engineering
+# API standards
 
-Load [coding-core](../coding-core/SKILL.md) first if it is not in context; if it is missing, say so.
+Load the `coding-standards` skill first if it is not in context; if it is missing, say so.
 Core owns limits, naming, contracts, and change safety. This skill adds server concerns only.
 Apply only the relevant sections; a pure calculation needs no handler or database.
 

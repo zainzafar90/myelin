@@ -23,15 +23,16 @@ ln -s ~/practice/loopkit/skills/* ~/.claude/skills/
 
 | Piece | In myelin git | Live location |
 |---|---|---|
-| Practice skills: `coding-core` (base), `api-engineering`, `frontend-engineering`, `code-spacing` | `arsenal/skills/` (one source for every profile) | Symlinked into the skill folders of Claude (every profile), Codex, OpenCode, Command Code, Pi and Hermes |
-| Language and verify skills: `typescript-standards`, `frontend-verify-standards`, future `<lang>-standards` | `arsenal/skills/` | Symlinked into the same folders |
+| Practice skills: `coding-standards` (base), `api-standards`, `frontend-standards`, `code-spacing` | `arsenal/skills/` (one source for every profile) | Symlinked into the skill folders of Claude (every profile), Codex, OpenCode, Command Code, Pi and Hermes |
+| Language and verify skills: `typescript-standards`, `browser-verify`, future `<lang>-standards` | `arsenal/skills/` | Symlinked into the same folders |
 | Adopted orphan skills, such as `edge-lit-glass` (no known upstream, so adopting is not forking) | `arsenal/skills/` | Symlinked into `~/.claude/skills/` |
 | Third-party skills (118: source repo, path and hash each) | `arsenal/skill-lock.json` (snapshot; refresh with `cp ~/.agents/.skill-lock.json arsenal/`) | `~/.agents/` (has its own local git) |
 | loopkit (31 skills) | Not copied; upstream reference only | `~/practice/loopkit` clone, symlinked |
 | Manifest of `~/.claude/skills` | Not in this repo | `~/.claude/skills/SOURCES.md` (local git) |
 
-`coding-standards` is retired. It was folded into `coding-core` (files and
-directories, naming, comments).
+Renamed 2026-10-30: `coding-core`, `api-engineering` and `frontend-engineering`
+are now `coding-standards`, `api-standards` and `frontend-standards`.
+`frontend-verify-standards` was folded into `browser-verify`.
 
 ## Rules
 

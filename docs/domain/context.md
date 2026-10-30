@@ -117,10 +117,9 @@ and `retired`. Lines it cannot parse show under `unparsed`, never as zero debt.
 | Command Code | skills only | no | no | No adapter yet. |
 | Hermes | skills only | partial | no | Partial stop support only. |
 
-The practice skills (`coding-core`, `api-engineering`, `frontend-engineering`,
+The practice skills (`coding-standards`, `api-standards`, `frontend-standards`,
 `code-spacing`) live once in `arsenal/skills/`. They are symlinked into the
-skill folders of every agent above. `coding-standards` was retired into
-`coding-core`.
+skill folders of every agent above.
 
 ## Invariants
 
@@ -227,7 +226,7 @@ Compare stamped repos (the registry) against all other active repos.
 - Phase 2 miner: run the per-project fan-out as a Workflow script (capped,
   skip-inactive, no silent truncation) instead of prompt-directed subagents?
   Proposed, no verdict yet.
-- `frontend-verify-standards` has not had a live run in a real UI repo. Its
-  house checks are untested guesses.
+- `browser-verify` house checks (embed, color schemes, viewports) have not had
+  a live run in a real UI repo. They are untested guesses.
 - Closed already: `/goal` stays out of myelin; no `/build deep` command; native
   `/schedule` is rejected for the miner (it needs local repos and transcripts).

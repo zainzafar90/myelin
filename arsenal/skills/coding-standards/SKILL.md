@@ -1,23 +1,23 @@
 ---
-name: coding-core
+name: coding-standards
 description: >-
   Applies shared coding and change-safety standards when implementing, refactoring,
   debugging, or reviewing code in any language. Use for code changes, architecture
   cleanup, business-rule preservation, and code review. Covers readable control
   flow, cohesive responsibilities, explicit contracts, safe failures, and behavior
-  tests. Combine with api-engineering for server work, code-spacing for blank lines, and frontend-engineering for
+  tests. Combine with api-standards for server work, code-spacing for blank lines, and frontend-standards for
   UI work. Not a framework migration or a mandate to reorganize the repository.
 metadata:
   version: "1.1.0"
 ---
 
-# Coding core
+# Coding standards
 
 Leave code easy to traverse, vertically scannable, explicit about its rules, and safe to modify.
 Prefer boring, concrete code over cleverness and architectural ceremony.
 
 This skill is the single home for shared numbers and naming rules. Language and concern skills
-(`typescript-standards`, `react-craft`, `api-engineering`, `frontend-engineering`) add deltas and
+(`typescript-standards`, `react-standards`, `api-standards`, `frontend-standards`) add deltas and
 must not restate or contradict them.
 
 ## Apply proportionately

@@ -2,7 +2,7 @@
 
 Read for TypeScript on either side of the client/server boundary. TypeScript does not imply React, a browser,
 Node.js, or a package manager. Limits, file naming, comments, and the package-manager rule live in
-[coding-core](../SKILL.md); React rules live in `react-craft`.
+the `coding-standards` skill; React rules live in `react-standards`.
 
 ## Contracts and types
 
