@@ -1,6 +1,6 @@
 {
   "name": "myelin",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Thin workflow router: canon injection, exit gates, project state ledger. Owns zero skills.",
   "author": { "name": "Zain Zafar" },
   "license": "MIT",
