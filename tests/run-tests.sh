@@ -113,7 +113,7 @@ test_session_start() {
   assert_output_has "plan count" "active plans: 1"
   assert_output_has "debt count" "debt: 2 (high: 1)"
 
-  for moment in START STUCK SHIP HANDOFF SETUP; do
+  for moment in START STUCK SHIP HANDOFF SETUP PARALLEL; do
     assert_moment "$moment"
   done
 
@@ -159,6 +159,9 @@ test_gate_branches() {
   gate_on_branch main
   t "gate ignores [quick] on protected branch" 2 run_gate "git commit -m [quick] wip" "$no_evidence" "$FAKEREPO"
   t "gate blocks when review only MENTIONED (canon text)" 2 run_gate "git commit -m msg" canon-mention "$FAKEREPO"
+  t "gate allows commit when a subagent ran the review" 0 run_gate "git commit -m msg" subagent-review "$FAKEREPO"
+  t "gate allows a subagent slash command or spaced Skill call" 0 run_gate "git commit -m msg" subagent-slash "$FAKEREPO"
+  t "gate blocks when a subagent only mentions a review" 2 run_gate "git commit -m msg" subagent-mention "$FAKEREPO"
   t "gate fail-open outside a git repo" 0 run_gate "git commit -m msg" claim-no-evidence "$NO_REPO"
 }
 

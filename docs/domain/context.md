@@ -29,6 +29,7 @@ repeats.
 | SETUP | stack, layout, test and build commands, permissions | A repo without a passing test command gives every later gate nothing to check. Allowlists beat skip-permissions mode. |
 | STUCK | bugs and failures | Root cause before a fix. |
 | SHIP | review, polish, commit | The commit gate enforces it. |
+| PARALLEL | several agents at once | Shared resources break first: one test DB, one stash, one transcript. Each agent gets its own, and the orchestrator checks their claims. |
 | HANDOFF | one delegated task | A brief with stop conditions. |
 
 ## File map
@@ -108,7 +109,9 @@ and `retired`. Lines it cannot parse show under `unparsed`, never as zero debt.
   (the canon's punt rule). The agent reuses a matching id instead of
   duplicating.
 - **Commit gate.** On `git commit` or `git push` through Bash, the hook looks
-  for a real review in the transcript: a Skill call or slash command for
+  for a real review in the transcript, or in any of that session's subagent
+  transcripts (`<session>/subagents/*.jsonl`; subagents are handed the
+  parent's path): a Skill call or slash command for
   `pr-review`, `code-review` or `simplify` (on Codex: reading that skill's
   `SKILL.md`). If none is found, it exits 2 with a short message. The message
   does not list bypasses.
@@ -234,7 +237,7 @@ Compare stamped repos (the registry) against all other active repos.
   Real fix: reconcile against `reviews.md` (Phase 2).
 - Hermes has only partial stop support. Pi and Command Code have no adapters.
 - Reviewing in a different session than the commit still blocks. `[quick]` is
-  the stopgap.
+  the stopgap. A subagent's review counts for its parent session's commits.
 - The stop-gate claim regex is heuristic and can false-fire on innocent
   phrasing. Tune it with real data, never with a model call.
 - Phase 2 miner: run the per-project fan-out as a Workflow script (capped,
