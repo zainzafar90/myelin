@@ -162,6 +162,18 @@ test_gate_branches() {
   t "gate fail-open outside a git repo" 0 run_gate "git commit -m msg" claim-no-evidence "$NO_REPO"
 }
 
+stamp_fresh_repo() {
+  local fresh="$WORK_DIR/fresh"
+
+  git init -q "$fresh"
+  MYELIN_HOME="$WORK_DIR/home" bin/myelin-stamp "$fresh" >/dev/null
+  [ -f "$fresh/.knowledge/INDEX.md" ]
+}
+
+test_stamp() {
+  t "stamp a named repo with no commits yet" 0 stamp_fresh_repo
+}
+
 main() {
   trap cleanup_work_dir EXIT
 
@@ -172,6 +184,7 @@ main() {
   test_stop_verify
   test_gate_blocking
   test_gate_branches
+  test_stamp
 
   t "code-quality contract" 0 bash tests/contract/code-quality.sh
 

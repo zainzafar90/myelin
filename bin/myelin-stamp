@@ -2,7 +2,8 @@
 # myelin-stamp — find active git repos and stamp .knowledge/ into them.
 # Usage: myelin-stamp [--days N] [path ...]
 #   No paths: scans ~/projects for repos with commits in the
-#   last N days (default 30). Idempotent: never overwrites an existing
+#   last N days (default 30). Named paths are stamped even with no
+#   commits yet. Idempotent: never overwrites an existing
 #   .knowledge/, never duplicates pointers or registry lines.
 set -uo pipefail
 
@@ -64,7 +65,7 @@ stamp_repo() {
 }
 
 main() {
-  local p stamped=0 already=0 inactive=0
+  local p stamped=0 already=0 inactive=0 explicit=0
   local candidates=()
 
   if [ "${1:-}" = "--days" ]; then
@@ -74,6 +75,7 @@ main() {
   fi
 
   if [ $# -gt 0 ]; then
+    explicit=1
     candidates=("$@")
   else
     while IFS= read -r p; do
@@ -84,7 +86,8 @@ main() {
   for p in ${candidates[@]+"${candidates[@]}"}; do
     [ -d "$p" ] || continue
 
-    if ! is_active "$p"; then
+    # A named path is stamped even with no commits yet (SETUP).
+    if [ "$explicit" -eq 0 ] && ! is_active "$p"; then
       inactive=$((inactive + 1))
       continue
     fi
