@@ -30,6 +30,7 @@ repeats.
 | STUCK | bugs and failures | Root cause before a fix. |
 | UAT | acceptance, as a user would | Unit tests prove code; UAT proves the feature. Driving the real app, failure path included, is what lets agents add features without the user re-testing by hand. SHIP checks the evidence is there instead of running a second pass. |
 | SHIP | review, polish, commit | The commit gate enforces it. |
+| PERF | speed, load, size | Agents "optimise" by feel. A baseline number and a budget agreed with the user make each change provable, and the budget outlives the session. |
 | PARALLEL | several agents at once | Shared resources break first: one test DB, one stash, one transcript. Each agent gets its own, and the orchestrator checks their claims. |
 | HANDOFF | one delegated task | A brief with stop conditions. |
 
