@@ -8,14 +8,28 @@ not break: [HANDOFF.md](../../HANDOFF.md).
 A thin workflow router for coding agents. It does three things:
 
 1. **Canon.** A routing table (`canon/ROUTING.md`, 50 lines max) injected at
-   session start. It tells the agent which skill to use at four moments: START,
-   STUCK, SHIP, HANDOFF.
+   session start. It tells the agent which skill to use at each moment of a
+   product's life (see [Moments](#moments)).
 2. **Exit gates.** Bash hooks that stop a false "done" and an unreviewed commit.
 3. **Ledger.** A per-project `.knowledge/` folder any agent can read.
 
 It is not a skill pack (it owns zero plugin skills), not a model caller (hooks
 never call models), not a server or app, and it does not guess intent from
 prompts.
+
+## Moments
+
+Each moment is one canon row: a trigger and a route of skills or tools named,
+never bundled. The user steers the first pass of a moment; agents run the
+repeats.
+
+| Moment | Covers | Why it exists |
+|---|---|---|
+| START | idea, design, plan | Agents build what they guess; brainstorming and a plan pin down what was meant. |
+| SETUP | stack, layout, test and build commands, permissions | A repo without a passing test command gives every later gate nothing to check. Allowlists beat skip-permissions mode. |
+| STUCK | bugs and failures | Root cause before a fix. |
+| SHIP | review, polish, commit | The commit gate enforces it. |
+| HANDOFF | one delegated task | A brief with stop conditions. |
 
 ## File map
 

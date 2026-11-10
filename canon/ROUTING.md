@@ -5,6 +5,7 @@
 | Moment | Trigger | Route |
 |---|---|---|
 | START | new feature / "build X" / behavior change | superpowers:brainstorming → grilling (stress-test the design) → superpowers:writing-plans → register plan in `.knowledge/state/plans.md` → Codex brief; too big/foggy for one session → wayfinder |
+| SETUP | new repo or stack / first session in an unstamped repo | `myelin-stamp` → agree stack and layout with the user (codebase-design for module boundaries) → one test and one build command that pass, written in CLAUDE.md/AGENTS.md → permissions via fewer-permission-prompts or update-config allowlists, never skip-permissions → first commit through SHIP |
 | STUCK | bug, error, failing test, "broken" | superpowers:systematic-debugging |
 | SHIP | done-claim, branch finish, commit/push | superpowers:verification-before-completion → ship (pr-review → browser-verify if UI → ocd diff → lean → commit → pr-description) → reconcile ledger (close plans, punts → debt.md) |
 | HANDOFF | implementation delegated | codex:rescue with a filled brief (goal, files, invariants, acceptance, stop conditions) |

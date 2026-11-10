@@ -61,6 +61,11 @@ assert_output_has() {
   record $? "$name"
 }
 
+assert_moment() {
+  grep -qF "| $1 |" "$SESSION_OUT"
+  record $? "moment $1 injected"
+}
+
 stop_input() {
   printf '{"transcript_path":"%s","stop_hook_active":%s}' "$FIXTURES/transcript-$1.jsonl" "$2"
 }
@@ -77,7 +82,7 @@ gate_input() {
 run_stop() { stop_input "$@" | bash hooks/stop-verify.sh; }
 run_stop_missing() { stop_missing_input | bash hooks/stop-verify.sh; }
 run_gate() { gate_input "$@" | bash hooks/pre-git-gate.sh; }
-run_gate_file() { bash hooks/pre-git-gate.sh < "$1"; }
+run_gate_file() { jq -c --arg cwd "$FAKEREPO" '.cwd = $cwd' "$1" | bash hooks/pre-git-gate.sh; }
 run_session_start() { bash hooks/session-start.sh < "$1"; }
 
 gate_on_branch() {
@@ -107,6 +112,12 @@ test_session_start() {
   assert_output_has "canon injected" "Myelin Canon"
   assert_output_has "plan count" "active plans: 1"
   assert_output_has "debt count" "debt: 2 (high: 1)"
+
+  for moment in START STUCK SHIP HANDOFF SETUP; do
+    assert_moment "$moment"
+  done
+
+  t "canon within 50 lines" 0 test "$(wc -l < canon/ROUTING.md)" -le 50
 
   lines=$(wc -l < "$SESSION_OUT" | tr -d ' ')
   [ "$lines" -le "$INJECTION_BUDGET" ]
