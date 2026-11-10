@@ -113,7 +113,7 @@ test_session_start() {
   assert_output_has "plan count" "active plans: 1"
   assert_output_has "debt count" "debt: 2 (high: 1)"
 
-  for moment in START STUCK SHIP HANDOFF SETUP PARALLEL UAT PERF; do
+  for moment in START STUCK SHIP HANDOFF SETUP PARALLEL UAT PERF DEPLOY; do
     assert_moment "$moment"
   done
 
