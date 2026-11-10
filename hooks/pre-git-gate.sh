@@ -59,15 +59,26 @@ has_codex_review() {
   [ "$n" -gt 0 ]
 }
 
+file_has_review() {
+  # Evidence = real invocation, never prose: canon names these words.
+  has_claude_review "$1" || has_codex_review "$1"
+}
+
 has_review_evidence() {
-  local transcript="$1"
+  local transcript="$1" subs
 
   if [ -z "$transcript" ] || [ ! -f "$transcript" ]; then
     return 1
   fi
 
-  # Evidence = real invocation, never prose: canon names these words.
-  has_claude_review "$transcript" || has_codex_review "$transcript"
+  file_has_review "$transcript" && return 0
+
+  # Subagents get the parent's transcript path; their calls live here.
+  subs="${transcript%.jsonl}/subagents"
+  [ -d "$subs" ] || return 1
+
+  # Fixed-string pass first keeps big sessions inside the time budget.
+  grep -hsF '"name":"Skill"' "$subs"/*.jsonl | grep -qE "$CLAUDE_REVIEW_RE"
 }
 
 print_active_plans() {
