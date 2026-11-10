@@ -7,7 +7,8 @@
 | START | new feature / "build X" / behavior change | superpowers:brainstorming → grilling (stress-test the design) → superpowers:writing-plans → register plan in `.knowledge/state/plans.md` → Codex brief; too big/foggy for one session → wayfinder |
 | SETUP | new repo or stack / first session in an unstamped repo | `myelin-stamp` → agree stack and layout with the user (codebase-design for module boundaries) → one test and one build command that pass, written in CLAUDE.md/AGENTS.md → permissions via fewer-permission-prompts or update-config allowlists, never skip-permissions → first commit through SHIP |
 | STUCK | bug, error, failing test, "broken" | superpowers:systematic-debugging |
-| SHIP | done-claim, branch finish, commit/push | superpowers:verification-before-completion → ship (pr-review → browser-verify if UI → ocd diff → lean → commit → pr-description) → reconcile ledger (close plans, punts → debt.md) |
+| UAT | user-visible change is code-complete, before SHIP | run (launch the real app) → drive each acceptance criterion end to end as a user, plus one failure path → web: browser-verify; iOS: the simulator tool; CLI/API: real commands against a running instance → evidence (screenshots, output) goes in the PR → any failure → STUCK |
+| SHIP | done-claim, branch finish, commit/push | superpowers:verification-before-completion → ship (pr-review → UAT evidence present → ocd diff → lean → commit → pr-description) → reconcile ledger (close plans, punts → debt.md) |
 | PARALLEL | 2+ independent tasks / a plan with separable phases | superpowers:dispatching-parallel-agents → one shared rules file every agent reads (scope, base branch, test command, review, ship, report) → one branch + worktree per agent → isolated test resources per run, never a shared DB → never `git stash` (shared across worktrees) → agents wait on their own jobs, no interim hand-backs → orchestrator re-runs the riskiest checks and records merge order for stacked PRs |
 | HANDOFF | implementation delegated | codex:rescue with a filled brief (goal, files, invariants, acceptance, stop conditions) |
 
@@ -21,7 +22,7 @@ Debt loop: at task start check the injected open debt for related items; at fini
 - React/TS: typescript-standards, react-standards
 - Swift/macOS: swiftui-expert, macos-swiftui-gotchas
 - UI: ui (explore) / frontend-design (build) / ocd (review and last-mile pass); taste = project `.knowledge/state/DESIGN.md`
-- UI done-claim: browser-verify — run app → attack the change → console clean → CWV → embed/dark/mobile checks; no partial hand-backs
+- UI acceptance (UAT): browser-verify — run app → attack the change → console clean → CWV → embed/dark/mobile checks; no partial hand-backs
 - Architecture: codebase-design (deep-module vocabulary); audits → improve
 - Bug fix: tdd (failing test first); over-engineering → lean
 - Security: security-audit — fire on auth/input/query diffs

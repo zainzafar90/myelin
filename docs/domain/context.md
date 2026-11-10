@@ -28,6 +28,7 @@ repeats.
 | START | idea, design, plan | Agents build what they guess; brainstorming and a plan pin down what was meant. |
 | SETUP | stack, layout, test and build commands, permissions | A repo without a passing test command gives every later gate nothing to check. Allowlists beat skip-permissions mode. |
 | STUCK | bugs and failures | Root cause before a fix. |
+| UAT | acceptance, as a user would | Unit tests prove code; UAT proves the feature. Driving the real app, failure path included, is what lets agents add features without the user re-testing by hand. SHIP checks the evidence is there instead of running a second pass. |
 | SHIP | review, polish, commit | The commit gate enforces it. |
 | PARALLEL | several agents at once | Shared resources break first: one test DB, one stash, one transcript. Each agent gets its own, and the orchestrator checks their claims. |
 | HANDOFF | one delegated task | A brief with stop conditions. |
