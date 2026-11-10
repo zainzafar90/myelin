@@ -1,7 +1,7 @@
 {
   "name": "myelin",
-  "version": "0.2.3",
-  "description": "Thin workflow router: canon injection, exit gates, project state ledger. Owns zero skills.",
+  "version": "0.3.0",
+  "description": "Lifecycle router for coding agents: a route for every stage from idea to production, exit gates, and a project ledger. Owns zero skills.",
   "author": { "name": "Zain Zafar" },
   "license": "MIT",
   "hooks": "./hooks/codex-hooks.json",
