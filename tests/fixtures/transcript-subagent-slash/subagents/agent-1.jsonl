@@ -1,0 +1,2 @@
+{"type":"user","message":{"content":"<command-name>simplify</command-name>"}}
+{"type":"assistant","message":{"content":[{"type":"tool_use","name": "Skill","input": {"skill": "pr-review"}}]}}
