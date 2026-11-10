@@ -77,8 +77,8 @@ has_review_evidence() {
   subs="${transcript%.jsonl}/subagents"
   [ -d "$subs" ] || return 1
 
-  # Fixed-string pass first keeps big sessions inside the time budget.
-  grep -hsF '"name":"Skill"' "$subs"/*.jsonl | grep -qE "$CLAUDE_REVIEW_RE"
+  # One grep over all files; only Claude Code writes subagents/.
+  grep -qsE "$CLAUDE_REVIEW_RE" "$subs"/*.jsonl
 }
 
 print_active_plans() {
