@@ -32,6 +32,7 @@ repeats.
 | SHIP | review, polish, commit | The commit gate enforces it. |
 | PERF | speed, load, size | Agents "optimise" by feel. A baseline number and a budget agreed with the user make each change provable, and the budget outlives the session. |
 | DEPLOY | CI/CD and releases | Set up once with the user, then routine. The schema must move with the code, and every deploy needs a known way back. |
+| OBSERVE | errors and product analytics | After one setup with the user, triage is agent work: every prod error becomes a failing test and a linked fix, and every feature ships with the events that show whether it's used. |
 | PARALLEL | several agents at once | Shared resources break first: one test DB, one stash, one transcript. Each agent gets its own, and the orchestrator checks their claims. |
 | HANDOFF | one delegated task | A brief with stop conditions. |
 
